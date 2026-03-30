@@ -83,6 +83,25 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      libfprint = prev.libfprint.overrideAttrs (oldAttrs: {
+        version = "git";
+        src = final.fetchFromGitHub {
+          owner = "deftdawg";
+          repo = "libfprint-CS9711";
+          rev = "56bf490f8ea2ab9049f410b9dfe78b33d59fd2c4";
+          sha256 = "sha256-PVr/Mi3m0P1bojVYriubmpA8QC5oayV5RtHbyXyHPC0=";
+        };
+        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
+          final.opencv
+          final.cmake
+          final.doctest
+        ];
+      });
+    })
+  ];
+
   # Steam
   programs.steam = {
     enable = true;
@@ -98,6 +117,9 @@
 
   # TRIM explícito
   services.fstrim.enable = true;
+
+  # Fingerprint
+  services.fprintd.enable = true;
 
   # Limpeza e otimização automáticas do Nix
   nix.gc = {
@@ -211,6 +233,8 @@
 
     gnomeExtensions.dash-to-dock
     gnomeExtensions.caffeine
+
+    fprintd
   ];
 
   programs.firefox.enable = true;
