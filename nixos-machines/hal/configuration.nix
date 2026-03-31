@@ -10,9 +10,29 @@
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 0;
+
+  # Plymouth / silent boot
+  boot.plymouth = {
+    enable = true;
+    theme = "spinner";
+    logo = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+  };
+
+  boot.consoleLogLevel = 3;
+  boot.initrd.verbose = false;
 
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  # Kernel params (necessário para NVIDIA + splash)
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "udev.log_level=3"
+    "systemd.show_status=auto"
+    "nvidia-drm.modeset=1"
+  ];
 
   # Ajustes simples de memória
   boot.kernel.sysctl = {
@@ -49,6 +69,7 @@
   # GNOME + GDM
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+  services.gnome.gnome-software.enable = true;
 
   # Teclado
   services.xserver.xkb = {
@@ -152,7 +173,6 @@
           enable-animations = false;
         };
 
-        # Habilita escalonamento fracionário no GNOME
         "org/gnome/mutter" = {
           experimental-features = [ "scale-monitor-framebuffer" ];
         };
@@ -173,6 +193,7 @@
             "steam.desktop"
             "bitwarden.desktop"
             "onlyoffice-desktopeditors.desktop"
+            "org.gnome.Software.desktop"
             "org.gnome.Console.desktop"
           ];
         };
@@ -221,13 +242,17 @@
 
     firefox
     gnome-tweaks
+    gnome-software
 
     bitwarden-desktop
     onlyoffice-desktopeditors
+    rustdesk
+    warehouse
 
     mangohud
     goverlay
     protonup-qt
+    protonplus
 
     fluent-icon-theme
 
