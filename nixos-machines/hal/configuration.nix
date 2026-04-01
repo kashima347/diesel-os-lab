@@ -4,9 +4,21 @@
 
 let
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
-  dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
-  dieselBrandingIcon = pkgs.runCommandLocal "diesel-os-lab-branding-icon" { } ''
+  dieselLogo = ../../assets/branding/logo/diesel-os-lab-icon.png;
+  dieselSplash = ../../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+  dieselAvatar = ../../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
+  dieselWallpaper = ../../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-4k-v3.png;
+  dieselDconfBackup = ./dconf-backup.ini;
+
+  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
+    mkdir -p $out/share/diesel-os-lab
     mkdir -p $out/share/icons/hicolor/512x512/apps
+
+    cp ${dieselLogo} $out/share/diesel-os-lab/logo.png
+    cp ${dieselSplash} $out/share/diesel-os-lab/splash.png
+    cp ${dieselAvatar} $out/share/diesel-os-lab/avatar.png
+    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.png
+
     cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
   '';
 in
@@ -24,7 +36,7 @@ in
   boot.plymouth = {
     enable = true;
     theme = "spinner";
-    logo = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+    logo = dieselLogo;
   };
 
   boot.consoleLogLevel = 3;
@@ -182,7 +194,7 @@ in
     extraGroups = [ "networkmanager" "wheel" ];
   };
 
-  # GNOME / Dock / Zoom / Tema
+  # GNOME / Dock / Zoom / Tema / Wallpaper
   programs.dconf.profiles.user.databases = [
     {
       settings = {
@@ -196,6 +208,17 @@ in
 
         "org/gnome/mutter" = {
           experimental-features = [ "scale-monitor-framebuffer" ];
+        };
+
+        "org/gnome/desktop/background" = {
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-options = "zoom";
+        };
+
+        "org/gnome/desktop/screensaver" = {
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-options = "zoom";
         };
 
         "org/gnome/settings-daemon/plugins/power" = {
@@ -249,6 +272,45 @@ in
     }
   ];
 
+  # Avatar do usuário no GNOME
+  system.activationScripts.dieselHalAvatar = ''
+    mkdir -p /var/lib/AccountsService/icons
+    mkdir -p /var/lib/AccountsService/users
+
+    cp ${dieselBrandingAssets}/share/diesel-os-lab/avatar.png /var/lib/AccountsService/icons/hal
+
+    cat > /var/lib/AccountsService/users/hal <<EOF
+[User]
+Icon=/var/lib/AccountsService/icons/hal
+SystemAccount=false
+EOF
+
+    chmod 644 /var/lib/AccountsService/icons/hal
+    chmod 644 /var/lib/AccountsService/users/hal
+  '';
+
+  # Restore automático do dconf salvo no primeiro login
+  systemd.user.services.diesel-dconf-restore = {
+    description = "Diesel OS Lab first login dconf restore";
+    wantedBy = [ "graphical-session.target" ];
+    after = [ "graphical-session-pre.target" ];
+    path = [ pkgs.dconf pkgs.coreutils pkgs.bash ];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+    script = ''
+      stamp="$HOME/.local/state/diesel-os-lab/dconf-restored"
+
+      if [ -e "$stamp" ]; then
+        exit 0
+      fi
+
+      mkdir -p "$(dirname "$stamp")"
+      dconf load / < ${dieselDconfBackup}
+      touch "$stamp"
+    '';
+  };
+
   environment.systemPackages = with pkgs; [
     git
     curl
@@ -275,7 +337,7 @@ in
     protonplus
 
     fluent-icon-theme
-    dieselBrandingIcon
+    dieselBrandingAssets
 
     gnomeExtensions.dash-to-dock
     gnomeExtensions.caffeine
