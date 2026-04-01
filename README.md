@@ -83,7 +83,7 @@ Criar uma linha de desenvolvimento do sistema que permita:
 
 # Princípios do projeto
 
-O **diesel-os-lab** segue estes princípios:
+O **diesel-os-lab** segue estes princípios.
 
 ## 1. Separação entre estável e experimental
 
@@ -323,14 +323,3 @@ diesel-os-lab/
 │   ├── logos/
 │   └── images/
 └── docs/
-```
-
----
-
-# Apoie o Diesel OS Lab
-
-Se você gosta do projeto e quer ajudar na sua evolução, pode apoiar por aqui:
-
-- Pix: `ricardo.diesel@gmail.com`
-
-Seu apoio ajuda com desenvolvimento, testes, branding, documentação e infraestrutura do projeto.
