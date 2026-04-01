@@ -1,0 +1,2 @@
+com.vysp3r.ProtonPlus	ProtonPlus	flathub
+org.pegasus_frontend.Pegasus	Pegasus	flathub
