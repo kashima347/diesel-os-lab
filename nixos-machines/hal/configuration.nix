@@ -300,7 +300,6 @@ EOF
 
     bitwarden-desktop
     onlyoffice-desktopeditors
-    rustdesk
     warehouse
 
     mangohud
