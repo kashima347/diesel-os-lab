@@ -1,14 +1,12 @@
-# /etc/nixos/configuration.nix
-
 { config, pkgs, lib, ... }:
 
 let
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
-  dieselLogo = ../../assets/branding/logo/diesel-os-lab-icon.png;
-  dieselSplash = ../../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
-  dieselAvatar = ../../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = ../../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-4k-v3.png;
-  dieselDconfBackup = ./dconf-backup.ini;
+  dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
+  dieselSplash = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+  dieselAvatar = /home/hal/diesel-os-lab/assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
+  dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-4k-v3.png;
+  dieselDconfBackup = /home/hal/diesel-os-lab/nixos-machines/hal/dconf-backup.ini;
 
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
     mkdir -p $out/share/diesel-os-lab
@@ -27,12 +25,10 @@ in
     ./hardware-configuration.nix
   ];
 
-  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 0;
 
-  # Plymouth / silent boot
   boot.plymouth = {
     enable = true;
     theme = "spinner";
@@ -42,10 +38,8 @@ in
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  # Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
-  # Kernel params (necessário para NVIDIA + splash)
   boot.kernelParams = [
     "quiet"
     "splash"
@@ -54,12 +48,10 @@ in
     "nvidia-drm.modeset=1"
   ];
 
-  # Ajustes simples de memória
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
   };
 
-  # ZRAM
   zramSwap = {
     enable = true;
     memoryPercent = 40;
@@ -86,18 +78,15 @@ in
 
   services.xserver.enable = true;
 
-  # GNOME + GDM
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
   services.gnome.gnome-software.enable = true;
 
-  # Teclado
   services.xserver.xkb = {
     layout = "br";
     variant = "";
   };
 
-  # Som
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -107,11 +96,9 @@ in
     pulse.enable = true;
   };
 
-  # OpenGL / gráficos
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
-  # NVIDIA
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
@@ -143,7 +130,6 @@ in
     })
   ];
 
-  # Branding nativo do NixOS para /etc/os-release
   system.nixos.distroName = "Diesel OS Lab";
   system.nixos.vendorName = "Diesel OS Lab";
   system.nixos.extraOSReleaseArgs = {
@@ -153,29 +139,19 @@ in
     LOGO = "diesel-os-lab";
   };
 
-  # Steam
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
 
-  # GameMode
   programs.gamemode.enable = true;
-
-  # dconf
   programs.dconf.enable = true;
 
-  # TRIM explícito
   services.fstrim.enable = true;
-
-  # Fingerprint
   services.fprintd.enable = true;
-
-  # Mouse gaming / DPI
   services.ratbagd.enable = true;
 
-  # Limpeza e otimização automáticas do Nix
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -187,14 +163,12 @@ in
     dates = [ "weekly" ];
   };
 
-  # Usuário
   users.users.hal = {
     isNormalUser = true;
     description = "hal";
     extraGroups = [ "networkmanager" "wheel" ];
   };
 
-  # GNOME / Dock / Zoom / Tema / Wallpaper
   programs.dconf.profiles.user.databases = [
     {
       settings = {
@@ -272,7 +246,6 @@ in
     }
   ];
 
-  # Avatar do usuário no GNOME
   system.activationScripts.dieselHalAvatar = ''
     mkdir -p /var/lib/AccountsService/icons
     mkdir -p /var/lib/AccountsService/users
@@ -289,7 +262,6 @@ EOF
     chmod 644 /var/lib/AccountsService/users/hal
   '';
 
-  # Restore automático do dconf salvo no primeiro login
   systemd.user.services.diesel-dconf-restore = {
     description = "Diesel OS Lab first login dconf restore";
     wantedBy = [ "graphical-session.target" ];
