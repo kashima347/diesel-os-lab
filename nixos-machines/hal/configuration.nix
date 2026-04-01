@@ -5,7 +5,7 @@ let
   dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
   dieselSplash = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = /home/hal/diesel-os-lab/assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-4k-v3.png;
+  dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
   dieselDconfBackup = /home/hal/diesel-os-lab/nixos-machines/hal/dconf-backup.ini;
 
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
