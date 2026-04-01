@@ -323,3 +323,19 @@ diesel-os-lab/
 │   ├── logos/
 │   └── images/
 └── docs/
+```
+
+---
+
+# Apoie o Diesel OS Lab
+
+Se você gosta do projeto e quer ajudar na sua evolução, a página pública de apoio está aqui:
+
+**Página de apoio:**  
+`https://kashima347.github.io/diesel-os-lab/support/`
+
+Formas atuais:
+
+- Pix: `ricardo.diesel@gmail.com`
+
+Seu apoio ajuda com desenvolvimento, testes, branding, documentação e infraestrutura do projeto.
