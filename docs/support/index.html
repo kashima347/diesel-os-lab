@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apoie o Diesel OS Lab</title>
+  <meta name="description" content="Página oficial de apoio ao projeto Diesel OS Lab." />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --bg-soft: #121923;
+      --panel: #161f2b;
+      --panel-2: #1b2635;
+      --text: #e7edf7;
+      --muted: #9eb0c7;
+      --line: rgba(120, 170, 255, 0.18);
+      --blue: #4fa8ff;
+      --blue-soft: #8dc7ff;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(52, 110, 189, 0.18), transparent 35%),
+        linear-gradient(180deg, #0a0f15 0%, #0d131b 100%);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 56px 0 24px;
+    }
+
+    .hero-card {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(20, 28, 40, 0.95), rgba(15, 22, 31, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo-box {
+      background: linear-gradient(180deg, #0f1620, #192332);
+      border: 1px solid rgba(141, 199, 255, 0.18);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      overflow: hidden;
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .eyebrow {
+      color: var(--blue-soft);
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+      max-width: 760px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      padding: 24px 0 48px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(22, 31, 43, 0.96), rgba(16, 23, 32, 0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .support-box {
+      display: grid;
+      gap: 16px;
+    }
+
+    .method {
+      background: linear-gradient(180deg, rgba(28, 39, 54, 0.9), rgba(19, 28, 39, 0.95));
+      border: 1px solid rgba(120, 170, 255, 0.14);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .method-label {
+      color: var(--blue-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .pix-key {
+      display: inline-block;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text);
+      background: rgba(79, 168, 255, 0.08);
+      border: 1px solid rgba(79, 168, 255, 0.16);
+      border-radius: 14px;
+      padding: 12px 14px;
+      word-break: break-all;
+    }
+
+    .coming-soon {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 0 0 48px;
+    }
+
+    .footer-card {
+      background: linear-gradient(180deg, rgba(17, 24, 34, 0.96), rgba(12, 18, 26, 0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      color: var(--muted);
+      line-height: 1.75;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 860px) {
+      .hero-card {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-box {
+        min-height: 220px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="logo-box">
+          <img src="../../assets/branding/logo/diesel-os-lab-icon.png" alt="Diesel OS Lab" />
+        </div>
+
+        <div>
+          <div class="eyebrow">Support Diesel OS Lab</div>
+          <h1>Apoie o Diesel OS Lab</h1>
+          <p class="lead">
+            Ajude a financiar o desenvolvimento, os testes, o branding, a documentação
+            e a infraestrutura do projeto. Seu apoio fortalece a evolução do Diesel OS Lab
+            como plataforma pessoal de tecnologia, desempenho e identidade própria.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Por que apoiar</h2>
+        <p>
+          O Diesel OS Lab é um laboratório de evolução contínua do sistema, com foco em
+          performance, organização, branding, automação, gaming e experiência premium.
+        </p>
+        <ul>
+          <li>desenvolvimento e testes de configuração</li>
+          <li>branding e identidade visual do projeto</li>
+          <li>documentação e organização do repositório</li>
+          <li>assets, experimentos e evolução da estrutura</li>
+          <li>infraestrutura e manutenção do ambiente</li>
+        </ul>
+      </article>
+
+      <aside class="card">
+        <h2>Forma de apoio disponível</h2>
+
+        <div class="support-box">
+          <div class="method">
+            <div class="method-label">Pix</div>
+            <div class="pix-key">ricardo.diesel@gmail.com</div>
+            <div class="note">
+              Apoio direto ao projeto via Pix.
+            </div>
+          </div>
+
+          <div class="method">
+            <div class="method-label">PayPal / cartão</div>
+            <div class="coming-soon">Em breve</div>
+            <div class="note">
+              Assim que essa opção estiver pronta, ela será adicionada aqui.
+            </div>
+          </div>
+
+          <div class="method">
+            <div class="method-label">GitHub Sponsors</div>
+            <div class="coming-soon">Opcional para depois</div>
+            <div class="note">
+              Pode ser ativado futuramente como canal complementar de apoio ao projeto.
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="footer">
+      <div class="footer-card">
+        Todo apoio recebido será direcionado à evolução do <strong>Diesel OS Lab</strong>,
+        incluindo desenvolvimento, testes, branding, documentação e custos relacionados ao projeto.
+        <br /><br />
+        Este é um apoio ao projeto e ao seu desenvolvimento contínuo. Não se trata de doação beneficente institucional.
+      </div>
+    </section>
+  </div>
+</body>
+</html>
