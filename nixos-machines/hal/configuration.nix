@@ -2,6 +2,14 @@
 
 { config, pkgs, lib, ... }:
 
+let
+  dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
+  dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
+  dieselBrandingIcon = pkgs.runCommandLocal "diesel-os-lab-branding-icon" { } ''
+    mkdir -p $out/share/icons/hicolor/512x512/apps
+    cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
+  '';
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -45,7 +53,7 @@
     memoryPercent = 40;
   };
 
-  networking.hostName = "nixos";
+  networking.hostName = "diesel-os-lab";
   networking.networkmanager.enable = true;
   networking.firewall.enable = true;
 
@@ -123,6 +131,16 @@
     })
   ];
 
+  # Branding nativo do NixOS para /etc/os-release
+  system.nixos.distroName = "Diesel OS Lab";
+  system.nixos.vendorName = "Diesel OS Lab";
+  system.nixos.extraOSReleaseArgs = {
+    PRETTY_NAME = "Diesel OS Lab - Technology and Gaming Platform";
+    FANCY_NAME = dieselPrettyName;
+    DEFAULT_HOSTNAME = "diesel-os-lab";
+    LOGO = "diesel-os-lab";
+  };
+
   # Steam
   programs.steam = {
     enable = true;
@@ -141,6 +159,9 @@
 
   # Fingerprint
   services.fprintd.enable = true;
+
+  # Mouse gaming / DPI
+  services.ratbagd.enable = true;
 
   # Limpeza e otimização automáticas do Nix
   nix.gc = {
@@ -240,7 +261,6 @@
     usbutils
     mesa-demos
 
-    firefox
     gnome-tweaks
     gnome-software
 
@@ -255,10 +275,12 @@
     protonplus
 
     fluent-icon-theme
+    dieselBrandingIcon
 
     gnomeExtensions.dash-to-dock
     gnomeExtensions.caffeine
 
+    piper
     fprintd
   ];
 

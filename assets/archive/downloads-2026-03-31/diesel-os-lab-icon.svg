@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1720"/>
+      <stop offset="100%" stop-color="#1b2430"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9ed8ff"/>
+      <stop offset="45%" stop-color="#58aee8"/>
+      <stop offset="100%" stop-color="#245fbe"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#bg)"/>
+  <rect x="26" y="26" width="460" height="460" rx="110" fill="none" stroke="#2e3c4f" stroke-width="2"/>
+
+  <!-- Monograma D -->
+  <g filter="url(#shadow)" fill="none" stroke="url(#metal)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- espinha -->
+    <path d="M168 118 L168 394" stroke-width="34"/>
+    <!-- topo -->
+    <path d="M168 118 L264 118 C338 118 392 174 392 256" stroke-width="34"/>
+    <!-- base -->
+    <path d="M168 394 L264 394 C338 394 392 338 392 256" stroke-width="34"/>
+    <!-- corte interno futurista -->
+    <path d="M214 176 L286 176 C330 176 362 210 362 256 C362 302 330 336 286 336 L214 336" stroke-width="16" opacity="0.7"/>
+    <!-- detalhe angular -->
+    <path d="M228 156 L312 240" stroke-width="14" opacity="0.9"/>
+  </g>
+</svg>
