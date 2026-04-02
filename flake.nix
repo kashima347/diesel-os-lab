@@ -23,5 +23,13 @@
           ./nixos-machines/hal/configuration.nix
         ];
       };
+
+      nixosConfigurations.installed-test = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./nixos-machines/hal/hardware-configuration.nix
+          ./modules/installed/diesel-installed.nix
+        ];
+      };
     };
 }

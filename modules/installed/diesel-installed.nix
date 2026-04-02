@@ -1,28 +1,8 @@
 { config, pkgs, lib, ... }:
 
-let
-  dieselLogo = ../../assets/branding/logo/diesel-os-lab-icon.png;
-  dieselSplash = ../../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
-  dieselAvatar = ../../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = ../../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
-  dieselDconfBackup = ./dconf-backup.ini;
-
-  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets-hal" { } ''
-    mkdir -p $out/share/diesel-os-lab
-    mkdir -p $out/share/icons/hicolor/512x512/apps
-
-    cp ${dieselLogo} $out/share/diesel-os-lab/logo.png
-    cp ${dieselSplash} $out/share/diesel-os-lab/splash.png
-    cp ${dieselAvatar} $out/share/diesel-os-lab/avatar.png
-    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.png
-
-    cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
-  '';
-in
 {
   imports = [
-    ./hardware-configuration.nix
-    ../../modules/shared/diesel-defaults.nix
+    ../shared/diesel-defaults.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -51,7 +31,7 @@ in
     memoryPercent = 40;
   };
 
-  networking.hostName = "diesel-os-lab";
+  networking.hostName = lib.mkDefault "diesel-os-lab";
   networking.networkmanager.enable = true;
   networking.firewall.enable = true;
 
@@ -131,74 +111,10 @@ in
   };
 
   programs.gamemode.enable = true;
-  programs.virt-manager.enable = true;
 
   services.fstrim.enable = true;
   services.fprintd.enable = true;
   services.ratbagd.enable = true;
-
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      swtpm.enable = true;
-    };
-  };
-
-  virtualisation.spiceUSBRedirection.enable = true;
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
-  };
-
-  nix.optimise = {
-    automatic = true;
-    dates = [ "weekly" ];
-  };
-
-  users.users.hal = {
-    isNormalUser = true;
-    description = "hal";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
-  };
-
-  system.activationScripts.dieselHalAvatar = ''
-    mkdir -p /var/lib/AccountsService/icons
-    mkdir -p /var/lib/AccountsService/users
-
-    cp ${dieselBrandingAssets}/share/diesel-os-lab/avatar.png /var/lib/AccountsService/icons/hal
-
-    cat > /var/lib/AccountsService/users/hal <<EOF
-[User]
-Icon=/var/lib/AccountsService/icons/hal
-SystemAccount=false
-EOF
-
-    chmod 644 /var/lib/AccountsService/icons/hal
-    chmod 644 /var/lib/AccountsService/users/hal
-  '';
-
-  systemd.user.services.diesel-dconf-restore = {
-    description = "Diesel OS Lab first login dconf restore";
-    wantedBy = [ "graphical-session.target" ];
-    after = [ "graphical-session-pre.target" ];
-    path = [ pkgs.dconf pkgs.coreutils pkgs.bash ];
-    serviceConfig = {
-      Type = "oneshot";
-    };
-    script = ''
-      stamp="$HOME/.local/state/diesel-os-lab/dconf-restored"
-
-      if [ -e "$stamp" ]; then
-        exit 0
-      fi
-
-      mkdir -p "$(dirname "$stamp")"
-      dconf load / < ${dieselDconfBackup}
-      touch "$stamp"
-    '';
-  };
 
   environment.systemPackages = with pkgs; [
     git
@@ -224,7 +140,6 @@ EOF
 
     piper
     fprintd
-    virt-viewer
   ];
 
   programs.firefox.enable = true;

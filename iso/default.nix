@@ -1,16 +1,17 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
   dieselLogo = ../assets/branding/logo/diesel-os-lab-icon.png;
+  dieselSplash = ../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = ../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = ../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-4k-v3.png;
+  dieselWallpaper = ../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
 
-  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
+  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets-iso" { } ''
     mkdir -p $out/share/diesel-os-lab
     mkdir -p $out/share/icons/hicolor/512x512/apps
 
     cp ${dieselLogo} $out/share/diesel-os-lab/logo.png
+    cp ${dieselSplash} $out/share/diesel-os-lab/splash.png
     cp ${dieselAvatar} $out/share/diesel-os-lab/avatar.png
     cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.png
 
@@ -28,17 +29,11 @@ let
     ${pkgs.glib}/bin/gsettings set org.gnome.desktop.screensaver picture-uri "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png" || true
     ${pkgs.glib}/bin/gsettings set org.gnome.desktop.screensaver picture-options 'zoom' || true
   '';
-
-  dieselInstallerAutostart = pkgs.writeShellScript "diesel-live-launch-installer" ''
-    sleep 8
-    if ! ${pkgs.procps}/bin/pgrep -x calamares >/dev/null 2>&1; then
-      calamares >/dev/null 2>&1 &
-    fi
-  '';
 in
 {
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix")
+    ../modules/shared/diesel-defaults.nix
   ];
 
   networking.hostName = "diesel-os-lab-iso";
@@ -75,12 +70,6 @@ in
 
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.grub.enable = lib.mkForce false;
-
-  boot.plymouth = {
-    enable = true;
-    theme = "spinner";
-    logo = dieselLogo;
-  };
 
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
@@ -140,51 +129,6 @@ in
     })
   ];
 
-  system.nixos.distroName = "Diesel OS Lab";
-  system.nixos.vendorName = "Diesel OS Lab";
-  system.nixos.extraOSReleaseArgs = {
-    PRETTY_NAME = "Diesel OS Lab - Technology and Gaming Platform";
-    FANCY_NAME = dieselPrettyName;
-    DEFAULT_HOSTNAME = "diesel-os-lab";
-    LOGO = "diesel-os-lab";
-  };
-
-  programs.dconf.enable = true;
-
-  programs.dconf.profiles.user.databases = [
-    {
-      settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          gtk-theme = "Adwaita-dark";
-          cursor-theme = "Adwaita";
-          icon-theme = "Fluent-dark";
-          enable-animations = false;
-        };
-
-        "org/gnome/mutter" = {
-          experimental-features = [ "scale-monitor-framebuffer" ];
-        };
-
-        "org/gnome/desktop/background" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
-          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
-          picture-options = "zoom";
-        };
-
-        "org/gnome/desktop/screensaver" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
-          picture-options = "zoom";
-        };
-
-        "org/gnome/settings-daemon/plugins/power" = {
-          sleep-inactive-ac-type = "nothing";
-          sleep-inactive-battery-type = "nothing";
-        };
-      };
-    }
-  ];
-
   system.activationScripts.dieselLiveAvatar = ''
     mkdir -p /var/lib/AccountsService/icons
     mkdir -p /var/lib/AccountsService/users
@@ -206,16 +150,6 @@ EOF
     Type=Application
     Name=Diesel OS Lab Live Branding
     Exec=${dieselLiveSetup}
-    Terminal=false
-    NoDisplay=true
-    X-GNOME-Autostart-enabled=true
-  '';
-
-  environment.etc."xdg/autostart/diesel-os-lab-installer.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Name=Diesel OS Lab Installer
-    Exec=${dieselInstallerAutostart}
     Terminal=false
     NoDisplay=true
     X-GNOME-Autostart-enabled=true
@@ -246,7 +180,6 @@ EOF
     usbutils
     mesa-demos
 
-    gnome-tweaks
     gnome-software
 
     bitwarden-desktop
@@ -258,12 +191,6 @@ EOF
     goverlay
     protonup-qt
     protonplus
-
-    fluent-icon-theme
-    dieselBrandingAssets
-
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.caffeine
 
     piper
     fprintd
