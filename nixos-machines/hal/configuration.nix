@@ -147,10 +147,20 @@ in
 
   programs.gamemode.enable = true;
   programs.dconf.enable = true;
+  programs.virt-manager.enable = true;
 
   services.fstrim.enable = true;
   services.fprintd.enable = true;
   services.ratbagd.enable = true;
+
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      swtpm.enable = true;
+    };
+  };
+
+  virtualisation.spiceUSBRedirection.enable = true;
 
   nix.gc = {
     automatic = true;
@@ -166,7 +176,7 @@ in
   users.users.hal = {
     isNormalUser = true;
     description = "hal";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };
 
   programs.dconf.profiles.user.databases = [
@@ -305,7 +315,6 @@ EOF
     mangohud
     goverlay
     protonup-qt
-    protonplus
 
     fluent-icon-theme
     dieselBrandingAssets
@@ -315,6 +324,7 @@ EOF
 
     piper
     fprintd
+    virt-viewer
   ];
 
   programs.firefox.enable = true;
