@@ -41,7 +41,7 @@ in
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix")
   ];
 
-  networking.hostName = "diesel-os-lab-installer";
+  networking.hostName = "diesel-os-lab-iso";
   networking.networkmanager.enable = true;
 
   time.timeZone = "America/Sao_Paulo";
@@ -64,7 +64,17 @@ in
     variant = "";
   };
 
+  nixpkgs.config.allowUnfree = true;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
   boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.loader.grub.enable = lib.mkForce false;
 
   boot.plymouth = {
     enable = true;
@@ -82,6 +92,8 @@ in
     "nvidia-drm.modeset=1"
   ];
 
+  hardware.enableRedistributableFirmware = true;
+
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -94,6 +106,12 @@ in
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "nixos";
+
+  services.upower.enable = true;
+  security.polkit.enable = true;
+
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -102,8 +120,6 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
-  nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
     (final: prev: {
@@ -163,6 +179,7 @@ in
 
         "org/gnome/settings-daemon/plugins/power" = {
           sleep-inactive-ac-type = "nothing";
+          sleep-inactive-battery-type = "nothing";
         };
       };
     }
@@ -203,6 +220,19 @@ EOF
     NoDisplay=true
     X-GNOME-Autostart-enabled=true
   '';
+
+  environment.etc."skel/Desktop/Instalar Diesel OS Lab.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Instalar Diesel OS Lab
+    Comment=Executar o instalador gráfico
+    Exec=calamares
+    Icon=drive-harddisk
+    Terminal=false
+    Categories=System;
+  '';
+
+  environment.etc."skel/Desktop/Instalar Diesel OS Lab.desktop".mode = "0755";
 
   environment.systemPackages = with pkgs; [
     git
@@ -250,7 +280,8 @@ EOF
 
   users.users.nixos.extraGroups = [ "networkmanager" "wheel" ];
 
-  image.fileName = "diesel-os-lab-installer.iso";
+  isoImage.volumeID = "DIESEL_OS_LAB";
+  image.fileName = "diesel-os-lab.iso";
 
   system.stateVersion = "25.11";
 }

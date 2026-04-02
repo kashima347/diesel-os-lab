@@ -8,6 +8,14 @@ let
   dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
   dieselDconfBackup = /home/hal/diesel-os-lab/nixos-machines/hal/dconf-backup.ini;
 
+  unstablePkgs = import (builtins.fetchTarball {
+    url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+    sha256 = "1cjh96id3s83jagfi57hq53dbpd1fdlagysgc53hhr2y3n0j6z31";
+  }) {
+    system = pkgs.system;
+    config.allowUnfree = true;
+  };
+
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
     mkdir -p $out/share/diesel-os-lab
     mkdir -p $out/share/icons/hicolor/512x512/apps
@@ -38,7 +46,7 @@ in
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = unstablePkgs.linuxPackages_zen;
 
   boot.kernelParams = [
     "quiet"

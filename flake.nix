@@ -13,7 +13,14 @@
       nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          ./hosts/iso/default.nix
+          ./iso/default.nix
+        ];
+      };
+
+      nixosConfigurations.lab = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./nixos-machines/hal/configuration.nix
         ];
       };
     };
