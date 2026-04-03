@@ -1,341 +1,190 @@
-# diesel-os-lab
+# Diesel OS Lab
 
-Laboratório oficial de evolução do meu NixOS.
+**Technology & Gaming Platform**  
+**Plataforma de Tecnologia e Games**  
+**Plateforme de technologie et de gaming**
 
-O **diesel-os-lab** é o repositório onde passam a acontecer todas as novas frentes de desenvolvimento do sistema, com foco em:
+---
 
+## Português
+
+### O que é o Diesel OS Lab
+
+O **Diesel OS Lab** é o laboratório principal de evolução de um sistema baseado em **NixOS**, com foco em:
+
+- desktop premium
 - gaming
-- desempenho
-- branding próprio
-- scripts
-- automação
-- ISO personalizada
-- estrutura modular
-- experimentação controlada
+- performance
+- identidade visual própria
+- restore confiável
+- futura ISO personalizada
 
-Este projeto existe para permitir evolução contínua sem comprometer a base estável já validada.
+Este repositório concentra a configuração principal da máquina, as decisões técnicas do projeto, a documentação e a base da futura ISO.
 
----
+### Baseline atual validada
 
-# Visão do projeto
+A combinação atualmente validada na máquina principal **hal** e adotada como referência para a futura ISO é:
 
-A proposta do **diesel-os-lab** é transformar uma configuração pessoal de NixOS em uma base cada vez mais:
+- **Kernel:** `6.18.13-zen1`
+- **Driver NVIDIA:** `595.58.03`
+- **NVIDIA power management:** `hardware.nvidia.powerManagement.enable = false`
 
-- forte para jogos
-- organizada
-- reproduzível
-- automatizada
-- visualmente consistente
-- preparada para reinstalação
-- apta a gerar uma identidade própria de sistema
+### Estrutura principal do repositório
 
-A visão de longo prazo é construir algo que não seja apenas um “conjunto de arquivos”, mas uma plataforma pessoal de sistema operacional com direção técnica, estética e prática bem definida.
+- **Configuração ativa da máquina hal:** `nixos-machines/hal/`
+- **Notas técnicas e decisões:** `docs/notes/`
+- **Guia de restore da máquina hal:** `docs/restore/hal-restore-pt-en-fr.md`
 
----
+### Objetivo do projeto
 
-# Relação entre os repositórios
+O objetivo do projeto é construir uma base NixOS refinada, estável, visualmente forte e preparada para:
 
-## `nixos-config-clean`
-
-O repositório **nixos-config-clean** permanece como:
-
-- base confiável
-- referência congelada
-- ponto seguro de restore
-- backup lógico da configuração validada
-- fundação estável do ambiente
-
-Ele não deve ser tratado como laboratório.
-
-## `diesel-os-lab`
-
-O repositório **diesel-os-lab** passa a ser o espaço de:
-
-- evolução nova
-- foco gamer
-- branding
-- scripts
-- ISO
-- experimentação
-- reorganização estrutural
-- testes técnicos
-- preparação de futuras versões mais completas do sistema
-
-Resumo prático:
-
-- **nixos-config-clean** = base estável
-- **diesel-os-lab** = laboratório de evolução
-
----
-
-# Objetivo principal
-
-Criar uma linha de desenvolvimento do sistema que permita:
-
-- experimentar sem perder segurança
-- evoluir sem destruir a base validada
-- documentar melhor o que está sendo feito
-- automatizar reinstalações e ajustes
-- preparar uma configuração cada vez mais próxima de uma distro própria
-- centralizar o futuro do projeto em um único repositório de trabalho
-
----
-
-# Princípios do projeto
-
-O **diesel-os-lab** segue estes princípios.
-
-## 1. Separação entre estável e experimental
-
-Nada importante deve depender apenas do laboratório sem validação.
-
-A base estável continua preservada separadamente.
-
-## 2. Reprodutibilidade
-
-Sempre que possível, as mudanças devem caminhar para:
-
-- configuração declarativa
-- scripts previsíveis
-- estrutura reaproveitável
-- processo claro de rebuild, restore e manutenção
-
-## 3. Evolução controlada
-
-Mudanças novas devem ser feitas com cuidado, preferindo:
-
-- etapas pequenas
-- validação antes de aplicar
-- organização progressiva
-- rollback possível
-
-## 4. Utilidade real
-
-O projeto não existe para ser bonito apenas no papel.
-
-Ele deve melhorar o uso real da máquina, principalmente em:
-
+- uso diário
 - jogos
-- desempenho
-- manutenção
-- reinstalação
-- clareza operacional
+- testes locais
+- futura distribuição própria / ISO personalizada
 
-## 5. Identidade própria
+### Restore e reinstalação
 
-O projeto deve ganhar, com o tempo, uma “cara” própria, incluindo:
+Para reinstalações futuras da máquina **hal**, siga o guia oficial de restore:
 
-- nome
-- branding
-- estrutura
-- aparência
-- fluxo de uso
-- estilo de organização
+`docs/restore/hal-restore-pt-en-fr.md`
 
----
+### Observações importantes
 
-# Escopo atual do diesel-os-lab
-
-Este repositório passa a concentrar os seguintes tipos de trabalho.
-
-## Gaming
-
-- Steam
-- Proton
-- Proton-GE
-- MangoHud
-- GameMode
-- launch options
-- tuning para jogos
-- compatibilidade
-- automações gamer
-- possíveis perfis por jogo
-- melhorias de firewall/host para jogos específicos
-
-## Desempenho
-
-- kernel
-- ajustes de sistema
-- análise de impacto
-- configurações de sessão
-- serviços
-- comportamento gráfico
-- validação de estabilidade
-
-## Branding
-
-- identidade visual do projeto
-- naming
-- organização da futura ISO
-- assets
-- wallpapers
-- aparência do sistema
-- ícones
-- padronização visual
-
-## Scripts e automação
-
-- backup
-- restore
-- sincronização
-- pós-instalação
-- aplicação de ajustes
-- preparação de ambiente
-- automação de tarefas repetitivas
-
-## Estrutura NixOS
-
-- modularização
-- separação por função
-- organização por host
-- reaproveitamento de blocos
-- limpeza de arquitetura
-- preparação para flake/ISO e futuras expansões
-
-## ISO personalizada
-
-- build de ISO
-- personalização de identidade
-- inclusão de componentes relevantes
-- caminho de instalação mais reproduzível
-- automação de pós-instalação
-
-## Experimentação
-
-- novos módulos
-- novos fluxos
-- novos pacotes
-- novas ideias
-- testes de organização
-- protótipos técnicos
+- os arquivos da máquina **hal** permanecem na branch **main**
+- a pasta `docs/` concentra explicações, histórico técnico e guias
+- a baseline atual foi validada na prática e deve ser tratada como referência até novo teste superior
 
 ---
 
-# O que entra aqui
+## English
 
-Devem entrar no **diesel-os-lab**:
+### What Diesel OS Lab is
 
-- toda evolução nova
-- todo recurso gamer novo
-- branding novo
-- scripts novos
-- testes de ISO
-- reorganização estrutural
-- automações ainda em desenvolvimento
-- experimentos que ainda não merecem ser promovidos para a base estável
+**Diesel OS Lab** is the main development lab for a **NixOS-based** system focused on:
 
----
+- premium desktop experience
+- gaming
+- performance
+- custom visual identity
+- reliable restore workflow
+- future custom ISO
 
-# O que continua fora daqui como referência principal
+This repository centralizes the main machine configuration, technical decisions, project documentation and the foundation of the future ISO.
 
-A referência estável e congelada continua sendo o:
+### Current validated baseline
 
-- `nixos-config-clean`
+The combination currently validated on the main **hal** machine and adopted as the reference for the future ISO is:
 
-Isso significa que o **diesel-os-lab** não apaga a importância do repositório clean.
+- **Kernel:** `6.18.13-zen1`
+- **NVIDIA driver:** `595.58.03`
+- **NVIDIA power management:** `hardware.nvidia.powerManagement.enable = false`
 
-Ele trabalha em cima da estratégia de segurança dada pela existência do clean.
+### Main repository structure
 
----
+- **Active configuration of the hal machine:** `nixos-machines/hal/`
+- **Technical notes and decisions:** `docs/notes/`
+- **Restore guide for the hal machine:** `docs/restore/hal-restore-pt-en-fr.md`
 
-# Estratégia de trabalho
+### Project goal
 
-A estratégia do projeto é simples:
+The goal of the project is to build a refined, stable, visually strong NixOS base prepared for:
 
-## Etapa 1: preservar a base
+- daily use
+- gaming
+- local testing
+- a future custom distribution / ISO
 
-A base confiável continua protegida no repositório clean.
+### Restore and reinstallation
 
-## Etapa 2: desenvolver no laboratório
+For future reinstalls of the **hal** machine, follow the official restore guide:
 
-Toda nova frente passa a ser construída no diesel-os-lab.
+`docs/restore/hal-restore-pt-en-fr.md`
 
-## Etapa 3: validar
+### Important notes
 
-Antes de aplicar algo importante no sistema:
-
-- revisar
-- comparar
-- validar
-- testar build quando necessário
-- evitar mudanças grandes sem leitura final
-
-## Etapa 4: consolidar o que funcionar
-
-O que se mostrar útil, estável e coerente pode virar parte da linha principal do projeto.
+- the **hal** machine files remain in the **main** branch
+- the `docs/` directory centralizes explanations, technical history and guides
+- the current baseline has been validated in practice and should be treated as the main reference until a better one is proven
 
 ---
 
-# Roadmap inicial
+## Français
 
-## Curto prazo
+### Qu’est-ce que Diesel OS Lab
 
-- consolidar o README do projeto
-- definir a estrutura inicial do repositório
-- separar melhor hosts, módulos, scripts e assets
-- preparar base para branding
-- preparar base para scripts recorrentes
-- começar a organizar a futura ISO
+**Diesel OS Lab** est le laboratoire principal de développement d’un système basé sur **NixOS**, avec un accent sur :
 
-## Médio prazo
+- une expérience desktop premium
+- le gaming
+- la performance
+- une identité visuelle propre
+- un flux de restauration fiable
+- une future ISO personnalisée
 
-- modularizar melhor a configuração
-- criar scripts práticos de manutenção e restore
-- consolidar fluxo gamer
-- consolidar fluxo visual/branding
-- amadurecer a estrutura do projeto
-- preparar builds mais organizados
+Ce dépôt centralise la configuration principale de la machine, les décisions techniques, la documentation du projet et la base de la future ISO.
 
-## Longo prazo
+### Base actuellement validée
 
-- criar uma identidade completa do sistema
-- gerar ISO realmente personalizada
-- automatizar melhor reinstalação e pós-instalação
-- construir um ambiente pessoal com cara de distro própria
-- tornar o laboratório uma base madura de evolução contínua
+La combinaison actuellement validée sur la machine principale **hal** et adoptée comme référence pour la future ISO est :
 
----
+- **Noyau :** `6.18.13-zen1`
+- **Pilote NVIDIA :** `595.58.03`
+- **Gestion d’alimentation NVIDIA :** `hardware.nvidia.powerManagement.enable = false`
 
-# Estrutura pretendida
+### Structure principale du dépôt
 
-A estrutura ainda pode evoluir, mas a direção é algo próximo disso:
+- **Configuration active de la machine hal :** `nixos-machines/hal/`
+- **Notes techniques et décisions :** `docs/notes/`
+- **Guide de restauration de la machine hal :** `docs/restore/hal-restore-pt-en-fr.md`
 
-```text
-diesel-os-lab/
-├── README.md
-├── flake.nix
-├── hosts/
-│   ├── hal/
-│   └── notebook/
-├── modules/
-│   ├── core/
-│   ├── desktop/
-│   ├── gaming/
-│   ├── nvidia/
-│   ├── branding/
-│   ├── services/
-│   └── users/
-├── scripts/
-├── iso/
-├── assets/
-│   ├── wallpapers/
-│   ├── branding/
-│   ├── logos/
-│   └── images/
-└── docs/
-```
+### Objectif du projet
+
+L’objectif du projet est de construire une base NixOS raffinée, stable, visuellement forte et préparée pour :
+
+- l’usage quotidien
+- le gaming
+- les tests locaux
+- une future distribution / ISO personnalisée
+
+### Restauration et réinstallation
+
+Pour les futures réinstallations de la machine **hal**, suivre le guide officiel de restauration :
+
+`docs/restore/hal-restore-pt-en-fr.md`
+
+### Remarques importantes
+
+- les fichiers de la machine **hal** restent dans la branche **main**
+- le dossier `docs/` centralise les explications, l’historique technique et les guides
+- la base actuelle a été validée en pratique et doit être traitée comme référence principale jusqu’à preuve d’une meilleure combinaison
 
 ---
 
-# Apoie o Diesel OS Lab
+## Current status / Estado atual / État actuel
 
-Se você gosta do projeto e quer ajudar na sua evolução, a página pública de apoio está aqui:
+- validated desktop baseline
+- machine configuration tracked in repository
+- restore workflow documented
+- project documentation available in three languages
+- future ISO planned from the validated baseline
 
-**Página de apoio:**  
-`https://kashima347.github.io/diesel-os-lab/support/`
+---
 
-Formas atuais:
+## Reference machine / Máquina de referência / Machine de référence
 
-- Pix: `ricardo.diesel@gmail.com`
+**Host:** `hal`  
+**Project name:** `diesel-os-lab`
 
-Seu apoio ajuda com desenvolvimento, testes, branding, documentação e infraestrutura do projeto.
+---
+
+## Notes / Notas / Notes
+
+For technical observations and milestone records, see:
+
+`docs/notes/`
+
+For restore instructions, see:
+
+`docs/restore/hal-restore-pt-en-fr.md`
