@@ -5,6 +5,7 @@ let
   dieselSplash = ../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = ../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
   dieselWallpaper = ../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
+  dieselInstalledModule = ../modules/installed/diesel-installed.nix;
 
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets-iso" { } ''
     mkdir -p $out/share/diesel-os-lab
@@ -125,6 +126,22 @@ in
           final.cmake
           final.doctest
         ];
+      });
+
+      calamares-nixos-extensions = prev.calamares-nixos-extensions.overrideAttrs (oldAttrs: {
+        postInstall = (oldAttrs.postInstall or "") + ''
+          ${final.python3}/bin/python3 <<EOF
+from pathlib import Path
+
+p = Path("$out/lib/calamares/modules/nixos/main.py")
+text = p.read_text()
+text = text.replace(
+    "      ./hardware-configuration.nix\\n    ];\\n",
+    "      ./hardware-configuration.nix\\n      ${dieselInstalledModule}\\n    ];\\n"
+)
+p.write_text(text)
+EOF
+        '';
       });
     })
   ];
