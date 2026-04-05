@@ -1,13 +1,21 @@
 { config, pkgs, lib, ... }:
 
 let
-  dieselLogo = ../../assets/branding/logo/diesel-os-lab-icon.png;
-  dieselSplash = ../../assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
-  dieselAvatar = ../../assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = ../../assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
-  dieselDconfBackup = ./dconf-backup.ini;
+  dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
+  dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
+  dieselSplash = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+  dieselAvatar = /home/hal/diesel-os-lab/assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
+  dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
+  dieselDconfBackup = /home/hal/diesel-os-lab/nixos-machines/hal/dconf-backup.ini;
 
-  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets-hal" { } ''
+  unstablePkgs = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/71caefc.tar.gz";
+  }) {
+    system = pkgs.system;
+    config.allowUnfree = true;
+  };
+
+  dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
     mkdir -p $out/share/diesel-os-lab
     mkdir -p $out/share/icons/hicolor/512x512/apps
 
@@ -22,17 +30,22 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/shared/diesel-defaults.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 0;
 
+  boot.plymouth = {
+    enable = true;
+    theme = "spinner";
+    logo = dieselLogo;
+  };
+
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = unstablePkgs.linuxPackages_zen;
 
   boot.kernelParams = [
     "quiet"
@@ -100,7 +113,14 @@ in
     open = true;
     nvidiaSettings = true;
     powerManagement.enable = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      version = "595.58.03";
+      sha256_64bit = "sha256-jA1Plnt5MsSrVxQnKu6BAzkrCnAskq+lVRdtNiBYKfk=";
+      sha256_aarch64 = "sha256-hzzIKY1Te8QkCBWR+H5k1FB/HK1UgGhai6cl3wEaPT8=";
+      openSha256 = "sha256-6LvJyT0cMXGS290Dh8hd9rc+nYZqBzDIlItOFk8S4n8=";
+      settingsSha256 = "sha256-2vLF5Evl2D6tRQJo0uUyY3tpWqjvJQ0/Rpxan3NOD3c=";
+      persistencedSha256 = "sha256-AtjM/ml/ngZil8DMYNH+P111ohuk9mWw5t4z7CHjPWw=";
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -124,6 +144,15 @@ in
     })
   ];
 
+  system.nixos.distroName = "Diesel OS Lab";
+  system.nixos.vendorName = "Diesel OS Lab";
+  system.nixos.extraOSReleaseArgs = {
+    PRETTY_NAME = "Diesel OS Lab - Technology and Gaming Platform";
+    FANCY_NAME = dieselPrettyName;
+    DEFAULT_HOSTNAME = "diesel-os-lab";
+    LOGO = "diesel-os-lab";
+  };
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -131,11 +160,13 @@ in
   };
 
   programs.gamemode.enable = true;
+  programs.dconf.enable = true;
   programs.virt-manager.enable = true;
 
   services.fstrim.enable = true;
   services.fprintd.enable = true;
   services.ratbagd.enable = true;
+  services.lact.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;
@@ -162,6 +193,83 @@ in
     description = "hal";
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };
+
+  programs.dconf.profiles.user.databases = [
+    {
+      settings = {
+        "org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+          gtk-theme = "Adwaita-dark";
+          cursor-theme = "Adwaita";
+          icon-theme = "Fluent-dark";
+          enable-animations = false;
+        };
+
+        "org/gnome/mutter" = {
+          experimental-features = [ "scale-monitor-framebuffer" ];
+        };
+
+        "org/gnome/desktop/background" = {
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-options = "zoom";
+        };
+
+        "org/gnome/desktop/screensaver" = {
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-options = "zoom";
+        };
+
+        "org/gnome/settings-daemon/plugins/power" = {
+          sleep-inactive-ac-type = "nothing";
+        };
+
+        "org/gnome/shell" = {
+          disable-user-extensions = false;
+          enabled-extensions = [
+            "dash-to-dock@micxgx.gmail.com"
+            "caffeine@patapon.info"
+          ];
+          favorite-apps = [
+            "firefox.desktop"
+            "org.gnome.Nautilus.desktop"
+            "steam.desktop"
+            "bitwarden.desktop"
+            "onlyoffice-desktopeditors.desktop"
+            "org.gnome.Software.desktop"
+            "org.gnome.Console.desktop"
+          ];
+        };
+
+        "org/gnome/shell/extensions/dash-to-dock" = {
+          dock-position = "BOTTOM";
+          extend-height = false;
+          dock-fixed = false;
+          autohide = true;
+          autohide-in-fullscreen = true;
+          intellihide = true;
+          disable-overview-on-startup = true;
+          require-pressure-to-show = false;
+          pressure-threshold = lib.gvariant.mkDouble 0.0;
+          show-trash = false;
+          show-mounts = false;
+          isolate-workspaces = false;
+          click-action = "minimize";
+          scroll-action = "cycle-windows";
+          show-delay = lib.gvariant.mkDouble 0.0;
+          hide-delay = lib.gvariant.mkDouble 0.0;
+          animation-time = lib.gvariant.mkDouble 0.15;
+          dash-max-icon-size = lib.gvariant.mkInt32 40;
+          transparency-mode = "FIXED";
+          background-opacity = lib.gvariant.mkDouble 0.75;
+        };
+
+        "org/gnome/desktop/wm/preferences" = {
+          button-layout = ":minimize,maximize,close";
+        };
+      };
+    }
+  ];
 
   system.activationScripts.dieselHalAvatar = ''
     mkdir -p /var/lib/AccountsService/icons
@@ -212,6 +320,7 @@ EOF
     usbutils
     mesa-demos
 
+    gnome-tweaks
     gnome-software
 
     bitwarden-desktop
@@ -222,9 +331,16 @@ EOF
     goverlay
     protonup-qt
 
+    fluent-icon-theme
+    dieselBrandingAssets
+
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.caffeine
+
     piper
     fprintd
     virt-viewer
+    lact
   ];
 
   programs.firefox.enable = true;
