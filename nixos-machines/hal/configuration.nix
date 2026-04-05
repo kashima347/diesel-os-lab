@@ -334,7 +334,6 @@ EOF
 
     bitwarden-desktop
     onlyoffice-desktopeditors
-    warehouse
 
     mangohud
     goverlay
