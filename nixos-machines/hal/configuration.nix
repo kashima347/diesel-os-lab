@@ -11,7 +11,7 @@ let
   unstablePkgs = import (builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/71caefc.tar.gz";
   }) {
-    system = pkgs.system;
+    localSystem = pkgs.stdenv.hostPlatform;
     config.allowUnfree = true;
   };
 
@@ -62,6 +62,12 @@ in
   zramSwap = {
     enable = true;
     memoryPercent = 40;
+  };
+
+  fileSystems."/mnt/vmstore" = {
+    device = "/dev/disk/by-uuid/7f51b176-a0d1-4213-80c4-0f58b957315e";
+    fsType = "xfs";
+    options = [ "nofail" "x-gvfs-show" ];
   };
 
   networking.hostName = "diesel-os-lab";
@@ -176,6 +182,8 @@ in
   };
 
   virtualisation.spiceUSBRedirection.enable = true;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   nix.gc = {
     automatic = true;
