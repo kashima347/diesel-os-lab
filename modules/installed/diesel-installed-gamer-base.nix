@@ -190,38 +190,34 @@ in
           ];
           favorite-apps = [
             "firefox.desktop"
+            "org.gnome.Calendar.desktop"
             "org.gnome.Nautilus.desktop"
-            "steam.desktop"
-            "bitwarden-desktop.desktop"
-            "onlyoffice-desktopeditors.desktop"
             "org.gnome.Console.desktop"
+            "steam.desktop"
           ];
         };
 
         "org/gnome/shell/extensions/dash-to-dock" = {
-          dock-position = "BOTTOM";
-          extend-height = false;
-          dock-fixed = false;
+          animation-time = lib.gvariant.mkDouble 0.15;
           autohide = true;
           autohide-in-fullscreen = true;
-          intellihide = true;
-          disable-overview-on-startup = true;
-          require-pressure-to-show = false;
-          pressure-threshold = lib.gvariant.mkDouble 0.0;
-          show-trash = false;
-          show-mounts = false;
-          isolate-workspaces = false;
-          show-favorites = true;
-          show-show-apps-button = true;
-          show-apps-at-top = false;
-          click-action = "minimize";
-          scroll-action = "cycle-windows";
-          show-delay = lib.gvariant.mkDouble 0.0;
-          hide-delay = lib.gvariant.mkDouble 0.0;
-          animation-time = lib.gvariant.mkDouble 0.15;
-          dash-max-icon-size = lib.gvariant.mkInt32 40;
-          transparency-mode = "FIXED";
           background-opacity = lib.gvariant.mkDouble 0.75;
+          click-action = "minimize";
+          dash-max-icon-size = lib.gvariant.mkInt32 40;
+          disable-overview-on-startup = true;
+          dock-fixed = false;
+          dock-position = "BOTTOM";
+          extend-height = false;
+          hide-delay = lib.gvariant.mkDouble 0.05;
+          intellihide = true;
+          isolate-workspaces = false;
+          pressure-threshold = lib.gvariant.mkDouble 0.0;
+          require-pressure-to-show = false;
+          scroll-action = "cycle-windows";
+          show-delay = lib.gvariant.mkDouble 0.05;
+          show-mounts = false;
+          show-trash = false;
+          transparency-mode = "FIXED";
         };
       };
     }
