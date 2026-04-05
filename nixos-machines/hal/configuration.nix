@@ -1,12 +1,13 @@
 { config, pkgs, lib, ... }:
 
 let
+  dieselRepo = /home/hal/git/diesel-os-lab;
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
-  dieselLogo = /home/hal/diesel-os-lab/assets/branding/logo/diesel-os-lab-icon.png;
-  dieselSplash = /home/hal/diesel-os-lab/assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
-  dieselAvatar = /home/hal/diesel-os-lab/assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = /home/hal/diesel-os-lab/assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
-  dieselDconfBackup = /home/hal/diesel-os-lab/nixos-machines/hal/dconf-backup.ini;
+  dieselLogo = dieselRepo + /assets/branding/logo/diesel-os-lab-icon.png;
+  dieselSplash = dieselRepo + /assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
+  dieselAvatar = dieselRepo + /assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
+  dieselWallpaper = dieselRepo + /assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
+  dieselDconfBackup = dieselRepo + /nixos-machines/hal/dconf-backup.ini;
 
   unstablePkgs = import (builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/71caefc.tar.gz";
@@ -35,6 +36,9 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 0;
+
+  boot.supportedFilesystems = [ "f2fs" "vfat" "xfs" ];
+  boot.initrd.supportedFilesystems = [ "f2fs" "vfat" "xfs" ];
 
   boot.plymouth = {
     enable = true;
@@ -99,6 +103,10 @@ in
     layout = "br";
     variant = "";
   };
+
+  console.keyMap = "br-abnt2";
+
+  services.printing.enable = true;
 
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -167,18 +175,18 @@ in
 
   programs.gamemode.enable = true;
   programs.dconf.enable = true;
+  programs.firefox.enable = true;
   programs.virt-manager.enable = true;
 
   services.fstrim.enable = true;
+  services.flatpak.enable = true;
   services.fprintd.enable = true;
   services.ratbagd.enable = true;
   services.lact.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;
-    qemu = {
-      swtpm.enable = true;
-    };
+    qemu.swtpm.enable = true;
   };
 
   virtualisation.spiceUSBRedirection.enable = true;
@@ -350,10 +358,6 @@ EOF
     virt-viewer
     lact
   ];
-
-  programs.firefox.enable = true;
-
-  services.flatpak.enable = true;
 
   hardware.enableRedistributableFirmware = true;
 
