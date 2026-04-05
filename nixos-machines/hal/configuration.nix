@@ -1,20 +1,13 @@
 { config, pkgs, lib, ... }:
 
 let
-  dieselRepo = /home/hal/git/diesel-os-lab;
+  dieselRepo = ../..;
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
   dieselLogo = dieselRepo + /assets/branding/logo/diesel-os-lab-icon.png;
   dieselSplash = dieselRepo + /assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = dieselRepo + /assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
   dieselWallpaper = dieselRepo + /assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
   dieselDconfBackup = dieselRepo + /nixos-machines/hal/dconf-backup.ini;
-
-  unstablePkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/71caefc.tar.gz";
-  }) {
-    localSystem = pkgs.stdenv.hostPlatform;
-    config.allowUnfree = true;
-  };
 
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
     mkdir -p $out/share/diesel-os-lab
@@ -49,7 +42,7 @@ in
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  boot.kernelPackages = unstablePkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   boot.kernelParams = [
     "quiet"
