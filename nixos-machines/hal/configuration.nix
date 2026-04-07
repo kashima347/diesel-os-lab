@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  dieselRepo = ../..;
+  dieselRepo = /home/hal/diesel-os-lab-github;
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
   dieselLogo = dieselRepo + /assets/branding/logo/diesel-os-lab-icon.png;
   dieselSplash = dieselRepo + /assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
@@ -16,7 +16,7 @@ let
     cp ${dieselLogo} $out/share/diesel-os-lab/logo.png
     cp ${dieselSplash} $out/share/diesel-os-lab/splash.png
     cp ${dieselAvatar} $out/share/diesel-os-lab/avatar.png
-    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.png
+    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.jpg
 
     cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
   '';
@@ -42,7 +42,7 @@ in
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
 
   boot.kernelParams = [
     "quiet"
@@ -119,7 +119,7 @@ in
     modesetting.enable = true;
     open = true;
     nvidiaSettings = true;
-    powerManagement.enable = true;
+    powerManagement.enable = false;
     package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
       version = "595.58.03";
       sha256_64bit = "sha256-jA1Plnt5MsSrVxQnKu6BAzkrCnAskq+lVRdtNiBYKfk=";
@@ -177,6 +177,20 @@ in
   services.ratbagd.enable = true;
   services.lact.enable = true;
 
+  systemd.services.flatpak-repo = {
+    description = "Configurar Flathub globalmente";
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+    path = [ pkgs.flatpak ];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+    script = ''
+      flatpak remote-add --if-not-exists --system flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    '';
+  };
+
   virtualisation.libvirtd = {
     enable = true;
     qemu.swtpm.enable = true;
@@ -219,13 +233,13 @@ in
         };
 
         "org/gnome/desktop/background" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
-          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
+          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
           picture-options = "zoom";
         };
 
         "org/gnome/desktop/screensaver" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
           picture-options = "zoom";
         };
 
@@ -328,6 +342,7 @@ EOF
     pciutils
     usbutils
     mesa-demos
+    flatpak
 
     gnome-tweaks
     gnome-software
