@@ -1,13 +1,23 @@
 { config, pkgs, lib, ... }:
 
 let
-  dieselRepo = /home/hal/diesel-os-lab-github;
+  dieselRepo = /mnt/vmstore/projetos/diesel-os-lab;
   dieselPrettyName = "Diesel OS Lab — Technology & Gaming Platform";
   dieselLogo = dieselRepo + /assets/branding/logo/diesel-os-lab-icon.png;
   dieselSplash = dieselRepo + /assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = dieselRepo + /assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
   dieselWallpaper = dieselRepo + /assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
   dieselDconfBackup = dieselRepo + /nixos-machines/hal/dconf-backup.ini;
+
+  zen61813Pkgs = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/d215436dc2f9d64f63a2713fb8b67df85ba9f73e.tar.gz";
+  }) {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = {
+      allowUnfree = true;
+      nvidia.acceptLicense = true;
+    };
+  };
 
   dieselBrandingAssets = pkgs.runCommandLocal "diesel-os-lab-branding-assets" { } ''
     mkdir -p $out/share/diesel-os-lab
@@ -28,7 +38,7 @@ in
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 0;
+  boot.loader.timeout = 5;
 
   boot.supportedFilesystems = [ "f2fs" "vfat" "xfs" ];
   boot.initrd.supportedFilesystems = [ "f2fs" "vfat" "xfs" ];
@@ -42,7 +52,7 @@ in
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
 
-  boot.kernelPackages = pkgs.linuxPackages_6_18;
+  boot.kernelPackages = zen61813Pkgs.linuxPackages_zen;
 
   boot.kernelParams = [
     "quiet"
@@ -117,20 +127,22 @@ in
 
   hardware.nvidia = {
     modesetting.enable = true;
-    open = true;
-    nvidiaSettings = true;
+    open = false;
+    gsp.enable = false;
+    nvidiaSettings = false;
     powerManagement.enable = false;
     package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "595.58.03";
-      sha256_64bit = "sha256-jA1Plnt5MsSrVxQnKu6BAzkrCnAskq+lVRdtNiBYKfk=";
-      sha256_aarch64 = "sha256-hzzIKY1Te8QkCBWR+H5k1FB/HK1UgGhai6cl3wEaPT8=";
-      openSha256 = "sha256-6LvJyT0cMXGS290Dh8hd9rc+nYZqBzDIlItOFk8S4n8=";
-      settingsSha256 = "sha256-2vLF5Evl2D6tRQJo0uUyY3tpWqjvJQ0/Rpxan3NOD3c=";
-      persistencedSha256 = "sha256-AtjM/ml/ngZil8DMYNH+P111ohuk9mWw5t4z7CHjPWw=";
+      version = "590.48.01";
+      sha256_64bit = "sha256-ueL4BpN4FDHMh/TNKRCeEz3Oy1ClDWto1LO/LWlr1ok=";
+      useSettings = false;
+      usePersistenced = false;
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    nvidia.acceptLicense = true;
+  };
 
   nixpkgs.overlays = [
     (final: prev: {
@@ -347,6 +359,7 @@ EOF
     gnome-tweaks
     gnome-software
 
+    brave
     bitwarden-desktop
     onlyoffice-desktopeditors
 
