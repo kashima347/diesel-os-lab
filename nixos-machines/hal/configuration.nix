@@ -30,6 +30,8 @@ let
 
     cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
   '';
+
+  freefilesyncDonation = pkgs.callPackage /home/hal/freefilesync-donation { };
 in
 {
   imports = [
@@ -212,6 +214,44 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+      zlib
+      openssl
+      curl
+      glib
+      dbus
+      gtk2
+      gtk3
+      pango
+      cairo
+      atk
+      gdk-pixbuf
+      fontconfig
+      freetype
+      libGL
+      wayland
+      libxxf86vm
+      libxkbcommon
+      xorg.libX11
+      xorg.libXext
+      xorg.libXrender
+      xorg.libXtst
+      xorg.libXi
+      xorg.libXrandr
+      xorg.libXcursor
+      xorg.libXinerama
+      xorg.libxcb
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXfixes
+      xorg.libSM
+      xorg.libICE
+    ];
+  };
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -362,6 +402,7 @@ EOF
     brave
     bitwarden-desktop
     onlyoffice-desktopeditors
+    freefilesyncDonation
 
     mangohud
     goverlay
