@@ -6,7 +6,7 @@ let
   dieselLogo = dieselRepo + /assets/branding/logo/diesel-os-lab-icon.png;
   dieselSplash = dieselRepo + /assets/branding/splash/diesel-os-lab-splash-dark-v2-fixed.png;
   dieselAvatar = dieselRepo + /assets/branding/avatar/diesel-os-lab-avatar-github-v2.png;
-  dieselWallpaper = dieselRepo + /assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v3.jpg;
+  dieselWallpaper = dieselRepo + /assets/branding/wallpaper/diesel-os-lab-wallpaper-dark-1080p-v4.png;
   dieselDconfBackup = dieselRepo + /nixos-machines/hal/dconf-backup.ini;
 
   zen61813Pkgs = import (builtins.fetchTarball {
@@ -26,7 +26,7 @@ let
     cp ${dieselLogo} $out/share/diesel-os-lab/logo.png
     cp ${dieselSplash} $out/share/diesel-os-lab/splash.png
     cp ${dieselAvatar} $out/share/diesel-os-lab/avatar.png
-    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.jpg
+    cp ${dieselWallpaper} $out/share/diesel-os-lab/wallpaper.png
 
     cp ${dieselLogo} $out/share/icons/hicolor/512x512/apps/diesel-os-lab.png
   '';
@@ -245,13 +245,13 @@ in
         };
 
         "org/gnome/desktop/background" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
-          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
+          picture-uri-dark = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
           picture-options = "zoom";
         };
 
         "org/gnome/desktop/screensaver" = {
-          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.jpg";
+          picture-uri = "file://${dieselBrandingAssets}/share/diesel-os-lab/wallpaper.png";
           picture-options = "zoom";
         };
 
